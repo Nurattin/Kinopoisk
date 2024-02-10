@@ -1,4 +1,4 @@
-package com.example.kinopoisk.data.models
+package com.example.kinopoisk.data.network_layer.models
 
 
 import androidx.annotation.Keep
@@ -15,7 +15,7 @@ data class FilmsWrapperDto(
     @Keep
     @Serializable
     data class FilmDto(
-        val filmId: Int,
+        val filmId: String,
         val genres: List<GenreDto>,
         val nameRu: String,
         val posterUrlPreview: String,

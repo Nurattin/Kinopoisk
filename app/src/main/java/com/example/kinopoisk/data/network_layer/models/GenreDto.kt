@@ -1,4 +1,4 @@
-package com.example.kinopoisk.data.models
+package com.example.kinopoisk.data.network_layer.models
 
 import androidx.annotation.Keep
 import com.example.kinopoisk.domain.models.Genre

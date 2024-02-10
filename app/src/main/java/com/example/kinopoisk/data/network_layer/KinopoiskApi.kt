@@ -1,7 +1,7 @@
-package com.example.kinopoisk.data
+package com.example.kinopoisk.data.network_layer
 
-import com.example.kinopoisk.data.models.FilmDetailDto
-import com.example.kinopoisk.data.models.FilmsWrapperDto
+import com.example.kinopoisk.data.network_layer.models.FilmDetailDto
+import com.example.kinopoisk.data.network_layer.models.FilmsWrapperDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -9,12 +9,12 @@ import retrofit2.http.Query
 interface KinopoiskApi {
 
     @GET("/api/v2.2/films/top")
-    fun getFilms(
+    suspend fun getFilms(
         @Query("type") type: String,
     ): FilmsWrapperDto
 
     @GET("/api/v2.2/films/{id}")
-    fun getFilmById(
+    suspend fun getFilmById(
         @Path("type") type: String,
     ): FilmDetailDto
 }
