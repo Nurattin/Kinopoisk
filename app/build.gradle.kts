@@ -1,8 +1,11 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.android)
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
+    id("kotlin-parcelize")
+    id("kotlinx-serialization")
 }
-
 android {
     namespace = "com.example.kinopoisk"
     compileSdk = 34
@@ -50,41 +53,91 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         buildConfig = true
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+        kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
     }
 }
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation(libs.androidx.core)
+    implementation(libs.github.compose.datetime)
+    implementation(libs.androidx.lifecycle.viewModel.compose)
+    implementation(libs.androidx.lifecycle.viewModel.ktx)
+    implementation(libs.androidx.lifecycle.livedata)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.compose.activity)
+    implementation(libs.play.services.auth.api.phone)
+    androidTestImplementation(libs.androidx.eespresso.core)
+    debugImplementation(libs.androidx.compose.tooling)
+    debugImplementation(libs.androidx.compose.toolingPreview)
+    implementation(libs.androidx.compose.lifecycl.runtime)
+
+    //Junit
+    testImplementation(libs.junit.ktx)
+
+    //Compose
+    val composeBom = platform(libs.androidx.compose.bom)
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+    implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.foundationLayout)
+    implementation(libs.androidx.compose.iconExtended)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.runtime)
+    debugImplementation(libs.androidx.compose.tooling)
+    implementation(libs.androidx.compose.toolingPreview)
+    debugImplementation(libs.androidx.compose.toolingPreview)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.utils)
+    implementation(libs.androidx.compose.uiTestManifest)
+    implementation(libs.androidx.compose.uiTest)
+
+    //Hilt
+    implementation(libs.google.hilt.android)
+    implementation(libs.androidx.hilt.compose.navigation)
+    implementation(libs.androidx.startup)
+    kapt(libs.androidx.hilt.compiler)
+    kapt(libs.google.hilt.compiler)
+    kapt(libs.google.hilt.android.compiler)
+    kaptAndroidTest(libs.google.hilt.compiler)
+
+    //Retrofit
+    implementation(libs.squareup.okhttp3.interceptor)
+    implementation(libs.squareup.okhttp3)
+    implementation(libs.squareup.retrofit2.converter.gson)
+    implementation(libs.squareup.retrofit2.converter.serialization)
+    implementation(libs.squareup.retrofit2)
+
+    //Room
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
+    //ImageLoader
+    implementation(libs.coil.compose)
+
+    //System UI Controller
+    implementation(libs.google.accompanist.systemUiController)
+
+    //Splash screen
+    implementation(libs.androidx.splashscreen)
+
+    //Test
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
 }
