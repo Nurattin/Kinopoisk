@@ -4,6 +4,6 @@
     <string name="error_message_network">Произошла ошибка при загрузке данных, проверьте подключение к сети</string>
     <string name="popular">Популярные</string>
     <string name="not_found">Не найдено</string>
-    <string name="search">Не найдено</string>
+    <string name="search">Поиск</string>
     <string name="favorites">Избранное</string>
 </resources>
