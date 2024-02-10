@@ -1,13 +1,17 @@
 package com.example.kinopoisk.di
 
+import android.content.Context
+import androidx.room.Room
 import com.example.kinopoisk.BuildConfig
-import com.example.kinopoisk.data.KinopoiskApi
+import com.example.kinopoisk.data.network_layer.KinopoiskApi
+import com.example.kinopoisk.data.store_layer.FilmDatabase
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -34,6 +38,20 @@ object DataModule {
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .create()
     }
+
+    @Singleton
+    @Provides
+    fun provideYourDatabase(
+        @ApplicationContext app: Context
+    ) = Room.databaseBuilder(
+        app,
+        FilmDatabase::class.java,
+        "kinopoisk_db"
+    ).build()
+
+    @Singleton
+    @Provides
+    fun provideFilmDao(db: FilmDatabase) = db.getFilmDao()
 
     @Provides
     @Singleton

@@ -9,8 +9,9 @@ interface FilmRepository {
     fun getFilms(
         type: FileType,
         force: Boolean,
-        onlyFavorite: Boolean,
     ): Flow<List<Film>>
+
+    fun getFavoriteFilms(): Flow<List<Film>>
 
     fun getFilmDetail(
         id: String,
@@ -18,7 +19,7 @@ interface FilmRepository {
     ): Flow<FilmDetail>
 
     fun setFavorite(
-        favorite: Boolean,
+        film: Film,
     ): Flow<Boolean>
 }
 
