@@ -2,6 +2,7 @@
 ktx = "1.12.0"
 kt = "1.9.10"
 
+r8 = "8.2.16-dev"
 roomRuntime = "2.6.1"
 splashscreen = "1.0.1"
 
@@ -99,6 +100,7 @@ jetbrains-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-c
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 #OkHttps
+r8 = { module = "com.android.tools:r8", version.ref = "r8" }
 squareup-okhttp3-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okHttps" }
 squareup-okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okHttps" }
 

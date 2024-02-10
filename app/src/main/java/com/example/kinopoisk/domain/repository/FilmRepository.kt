@@ -12,13 +12,8 @@ interface FilmRepository {
         onlyFavorite: Boolean,
     ): Flow<List<Film>>
 
-    fun getFilmsByKeyWords(
-        keyWords: String,
-        onlyFavorite: Boolean,
-    ): Flow<List<Film>>
-
     fun getFilmDetail(
-        id: Int,
+        id: String,
         force: Boolean,
     ): Flow<FilmDetail>
 
