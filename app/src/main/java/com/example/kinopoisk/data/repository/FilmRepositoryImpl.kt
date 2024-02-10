@@ -24,19 +24,33 @@ class FilmRepositoryImpl @Inject constructor(
     private val dao: FilmDao,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : FilmRepository {
-    override fun getFilms(type: FileType, force: Boolean): Flow<List<Film>> =
+    override fun getFilms(
+        type: FileType,
+        keyWord: String,
+    ): Flow<List<Film>> =
         flow {
+            // Добавил фильтрацию коллекции, так как api метод не может обрабатывать фильтрцию по ключивому слову
             val filmsDto = api.getFilms(type.type)
-            val film = filmsDto.films.map { filmDto ->
-                filmDto.toFilm(false)
-            }
+            val film = filmsDto.films
+                // Эмулирует фильтрацию на стороне сервера
+                .filter { filmDto ->
+                    filmDto.nameRu.contains(
+                        other = keyWord,
+                        ignoreCase = true,
+                    )
+                }.map { filmDto ->
+                    val favorite = dao.findFilmById(filmDto.filmId)?.favorite ?: false
+                    filmDto.toFilm(favorite)
+                }
 
             emit(film)
         }.flowOn(ioDispatcher)
 
-    override fun getFavoriteFilms(): Flow<List<Film>> = dao.getAllFilmsFlow().map {
+    override fun observeFavoriteFilms(
+        keyWord: String,
+    ): Flow<List<Film>> = dao.getAllFilmsFlow(keyWord).map {
         it.map(FilmEntity::toFilm)
-    }
+    }.flowOn(ioDispatcher)
 
     override fun getFilmDetail(id: String, force: Boolean): Flow<FilmDetail> = flow {
         val filmDetailDto = api.getFilmById(id)
@@ -51,5 +65,5 @@ class FilmRepositoryImpl @Inject constructor(
             false -> dao.insertFilm(film.toFileEntity(true))
         }
         emit(!film.favorite)
-    }
+    }.flowOn(ioDispatcher)
 }

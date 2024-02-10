@@ -8,10 +8,12 @@ interface FilmRepository {
 
     fun getFilms(
         type: FileType,
-        force: Boolean,
+        keyWord: String,
     ): Flow<List<Film>>
 
-    fun getFavoriteFilms(): Flow<List<Film>>
+    fun observeFavoriteFilms(
+        keyWord: String
+    ): Flow<List<Film>>
 
     fun getFilmDetail(
         id: String,

@@ -18,6 +18,6 @@ interface FilmDao {
     @Query("SELECT * FROM films WHERE filmId = :filmId")
     suspend fun findFilmById(filmId: String): FilmEntity?
 
-    @Query("SELECT * FROM films WHERE favorite")
-    fun getAllFilmsFlow(): Flow<List<FilmEntity>>
+    @Query("SELECT * FROM films WHERE favorite == 1 AND LOWER(nameRu) LIKE '%' || LOWER(:keyWord) || '%'")
+    fun getAllFilmsFlow(keyWord: String): Flow<List<FilmEntity>>
 }

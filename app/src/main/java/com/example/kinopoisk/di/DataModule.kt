@@ -69,11 +69,9 @@ object DataModule {
     @Singleton
     fun provideRetrofit(
         okHttpClient: OkHttpClient,
-        @Named("Retrofit") gson: Gson,
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
