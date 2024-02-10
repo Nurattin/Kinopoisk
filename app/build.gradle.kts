@@ -22,10 +22,30 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("debug")
+            buildConfigField(
+                type = "String",
+                name = "API_KEY",
+                value = "\"e30ffed0-76ab-4dd6-b41f-4c9da2b2735b\"",
+            )
+            buildConfigField(
+                type = "String",
+                name = "BASE_URL",
+                value = "\"https://kinopoiskapiunofficial.tech\"",
+            )
+        }
+        debug {
+            buildConfigField(
+                type = "String",
+                name = "API_KEY",
+                value = "\"e30ffed0-76ab-4dd6-b41f-4c9da2b2735b\"",
+            )
+            buildConfigField(
+                type = "String",
+                name = "BASE_URL",
+                value = "\"https://kinopoiskapiunofficial.tech\"",
             )
         }
     }
@@ -37,6 +57,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
