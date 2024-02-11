@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Kinopoisk</string>
+    <string name="app_name">Кинопоиск</string>
     <string name="repeat">Повторить</string>
     <string name="error_message_network">Произошла ошибка при загрузке данных, проверьте подключение к сети</string>
     <string name="popular">Популярные</string>

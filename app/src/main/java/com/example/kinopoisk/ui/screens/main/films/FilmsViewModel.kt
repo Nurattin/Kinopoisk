@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.kinopoisk.data.collectAsResult
 import com.example.kinopoisk.domain.models.Film
 import com.example.kinopoisk.domain.models.FilmDetail
-import com.example.kinopoisk.domain.repository.FileType
+import com.example.kinopoisk.domain.repository.FilmQueryType
 import com.example.kinopoisk.domain.repository.FilmRepository
 import com.example.kinopoisk.utils.EffectHandler
 import com.example.kinopoisk.utils.EventHandler
@@ -178,7 +178,7 @@ class FilmsViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             filmRepository.getFilms(
-                type = FileType.TOP_100,
+                queryType = FilmQueryType.TOP_100,
                 keyWord = keyWord,
             ).collectAsResult(
                 onSuccess = { films ->

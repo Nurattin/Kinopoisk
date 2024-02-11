@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface FilmRepository {
 
     fun getFilms(
-        type: FileType,
+        queryType: FilmQueryType,
         keyWord: String,
     ): Flow<List<Film>>
 
@@ -25,6 +25,6 @@ interface FilmRepository {
     ): Flow<Boolean>
 }
 
-enum class FileType(val type: String) {
+enum class FilmQueryType(val type: String) {
     TOP_100("TOP_100_POPULAR_FILMS")
 }

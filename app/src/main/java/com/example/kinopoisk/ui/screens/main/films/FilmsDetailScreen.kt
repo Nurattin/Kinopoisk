@@ -3,6 +3,7 @@ package com.example.kinopoisk.ui.screens.main.films
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -62,6 +63,7 @@ fun FilmsDetailScreen(
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val bodyMediumStyle = MaterialTheme.typography.bodyMedium
+    val isDarkTheme = isSystemInDarkTheme()
 
     val scrollState = rememberScrollState()
 
@@ -136,6 +138,7 @@ fun FilmsDetailScreen(
                     Text(
                         text = descriptor,
                         style = MaterialTheme.typography.bodyMedium,
+                        color = if (isDarkTheme) Color.LightGray else Color.Gray
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
@@ -148,7 +151,11 @@ fun FilmsDetailScreen(
                             ) {
                                 append("${context.getString(R.string.genres)}: ")
                             }
-                            withStyle(bodyMediumStyle.toSpanStyle()) {
+                            withStyle(
+                                bodyMediumStyle.copy(
+                                    color = if (isDarkTheme) Color.LightGray else Color.Gray
+                                ).toSpanStyle()
+                            ) {
                                 append(genre)
                             }
                         },
@@ -165,7 +172,11 @@ fun FilmsDetailScreen(
                             ) {
                                 append("${context.getString(R.string.countries)}: ")
                             }
-                            withStyle(bodyMediumStyle.toSpanStyle()) {
+                            withStyle(
+                                bodyMediumStyle.copy(
+                                    color = if (isDarkTheme) Color.LightGray else Color.Gray
+                                ).toSpanStyle()
+                            ) {
                                 append(country)
                             }
                         },

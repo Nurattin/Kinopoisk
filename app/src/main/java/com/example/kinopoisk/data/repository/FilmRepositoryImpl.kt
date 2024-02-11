@@ -10,7 +10,7 @@ import com.example.kinopoisk.di.IoDispatcher
 import com.example.kinopoisk.domain.models.Film
 import com.example.kinopoisk.domain.models.FilmDetail
 import com.example.kinopoisk.domain.models.toFileEntity
-import com.example.kinopoisk.domain.repository.FileType
+import com.example.kinopoisk.domain.repository.FilmQueryType
 import com.example.kinopoisk.domain.repository.FilmRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -25,12 +25,12 @@ class FilmRepositoryImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : FilmRepository {
     override fun getFilms(
-        type: FileType,
+        queryType: FilmQueryType,
         keyWord: String,
     ): Flow<List<Film>> =
         flow {
             // Добавил фильтрацию коллекции, так как api метод не может обрабатывать фильтрцию по ключивому слову
-            val filmsDto = api.getFilms(type.type)
+            val filmsDto = api.getFilms(queryType.type)
             val film = filmsDto.films
                 // Эмулирует фильтрацию на стороне сервера
                 .filter { filmDto ->
