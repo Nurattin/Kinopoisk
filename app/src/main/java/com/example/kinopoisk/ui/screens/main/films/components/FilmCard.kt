@@ -4,11 +4,13 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,7 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import com.example.kinopoisk.utils.shimmerBrush
 
 @Preview
 @Composable
@@ -84,10 +87,12 @@ fun FilmCard(
 ) {
     val feedback = LocalHapticFeedback.current
     val shapeCard = MaterialTheme.shapes.medium
+    val shadowColor = MaterialTheme.colorScheme.onBackground
     Box(
         modifier = modifier
             .fillMaxWidth()
             .graphicsLayer {
+                spotShadowColor = shadowColor
                 clip = true
                 shape = shapeCard
                 shadowElevation = 50f
@@ -116,7 +121,7 @@ fun FilmCard(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(15.dp)
                 ) {
-                    AsyncImage(
+                    SubcomposeAsyncImage(
                         modifier = Modifier
                             .clip(MaterialTheme.shapes.small)
                             .size(
@@ -126,6 +131,13 @@ fun FilmCard(
                         model = imageUrl,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
+                        loading = {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(brush = shimmerBrush())
+                            )
+                        }
                     )
                     Column(
                         modifier = Modifier,

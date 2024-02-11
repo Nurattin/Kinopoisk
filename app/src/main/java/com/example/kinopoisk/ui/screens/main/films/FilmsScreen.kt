@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
@@ -91,119 +92,130 @@ fun FilmsScreen(
     var searchBarIsActive by rememberSaveable {
         mutableStateOf(false)
     }
-    Row(
-        modifier = modifier.fillMaxSize()
+    Surface(
+        modifier = modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.surface,
     ) {
-        Scaffold(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 1f else .5f),
-            backgroundColor = MaterialTheme.colorScheme.background,
-            topBar = {
-                if (searchBarIsActive) {
-                    KinopoiskSearchBar(
-                        modifier = Modifier
-                            .statusBarsPadding(),
-                        value = uiState.searchBarText,
-                        onValueChange = { newValue ->
-                            onEvent(
-                                FilmsEvent.ChangeSearchBarText(newValue)
-                            )
-                        },
-                        onClickBack = {
-                            searchBarIsActive = false
-                        },
-                    )
-                } else {
-                    TopAppBar(
-                        windowInsets = WindowInsets.statusBars,
-                        contentColor = MaterialTheme.colorScheme.onBackground,
-                        backgroundColor = MaterialTheme.colorScheme.background,
-                        elevation = 0.dp,
-                        title = {
-                            Crossfade(
-                                targetState = selectedFilmsType,
-                                label = "CrossfadeTitle"
-                            ) { type ->
-                                Text(
-                                    text = stringResource(type.text),
-                                    style = MaterialTheme.typography.titleLarge,
-                                    color = MaterialTheme.colorScheme.onBackground,
+        Row(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Scaffold(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 1f else .5f),
+                backgroundColor = MaterialTheme.colorScheme.background,
+                topBar = {
+                    if (searchBarIsActive) {
+                        KinopoiskSearchBar(
+                            modifier = Modifier
+                                .statusBarsPadding(),
+                            value = uiState.searchBarText,
+                            onValueChange = { newValue ->
+                                onEvent(
+                                    FilmsEvent.ChangeSearchBarText(newValue)
                                 )
-                            }
-
-                        },
-                        actions = {
-                            IconButton(
-                                onClick = {
-                                    searchBarIsActive = true
+                            },
+                            onClickBack = {
+                                searchBarIsActive = false
+                            },
+                        )
+                    } else {
+                        TopAppBar(
+                            windowInsets = WindowInsets.statusBars,
+                            contentColor = MaterialTheme.colorScheme.onBackground,
+                            backgroundColor = MaterialTheme.colorScheme.background,
+                            elevation = 0.dp,
+                            title = {
+                                Crossfade(
+                                    targetState = selectedFilmsType,
+                                    label = "CrossfadeTitle"
+                                ) { type ->
+                                    Text(
+                                        text = stringResource(type.text),
+                                        style = MaterialTheme.typography.titleLarge,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                    )
                                 }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Rounded.Search,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                )
+
+                            },
+                            actions = {
+                                IconButton(
+                                    onClick = {
+                                        searchBarIsActive = true
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Search,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                    )
+                                }
                             }
+                        )
+                    }
+                },
+                bottomBar = {
+                    FilmsBottomNavigation(
+                        selectedFilmsType = selectedFilmsType,
+                        onClickType = { type ->
+                            selectedFilmsType = type
                         }
                     )
                 }
-            },
-            bottomBar = {
-                FilmsBottomNavigation(
-                    selectedFilmsType = selectedFilmsType,
-                    onClickType = { type ->
-                        selectedFilmsType = type
-                    }
-                )
+            ) { innerPadding ->
+                val films = when (selectedFilmsType) {
+                    FilmsType.Popular -> uiState.films
+                    FilmsType.Favorite -> uiState.favoriteFilms
+                }
+                if (!uiState.error.isNullOrBlank() && selectedFilmsType != FilmsType.Favorite) {
+                    KinopoiskErrorScreen(
+                        errorText = uiState.error.toString(),
+                        onClickRetry = {
+                            onEvent(FilmsEvent.RefreshData)
+                        }
+                    )
+                } else if (
+                    (uiState.filmsLoading && selectedFilmsType == FilmsType.Popular)
+                    || (uiState.favoriteFilmsLoading && selectedFilmsType == FilmsType.Favorite)
+                ) {
+                    KinopoiskLoadingScreen(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                    )
+                } else if (!uiState.filmsLoading && !uiState.favoriteFilmsLoading && films.isEmpty()) {
+                    KinopoiskEmptyList(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                    )
+                } else {
+                    FilmsList(
+                        modifier = Modifier
+                            .padding(innerPadding),
+                        films = films,
+                        onEvent = onEvent,
+                    )
+                }
             }
-        ) { innerPadding ->
-            val films = when (selectedFilmsType) {
-                FilmsType.Popular -> uiState.films
-                FilmsType.Favorite -> uiState.favoriteFilms
-            }
-            if (!uiState.error.isNullOrBlank() && selectedFilmsType != FilmsType.Favorite) {
-                KinopoiskErrorScreen(
-                    errorText = uiState.error.toString(),
-                    onClickRetry = {
-                        onEvent(FilmsEvent.RefreshData)
-                    }
-                )
-            } else if (
-                (uiState.filmsLoading && selectedFilmsType == FilmsType.Popular)
-                || (uiState.favoriteFilmsLoading && selectedFilmsType == FilmsType.Favorite)
-            ) {
-                KinopoiskLoadingScreen()
-            } else if (!uiState.filmsLoading && !uiState.favoriteFilmsLoading && films.isEmpty()) {
-                KinopoiskEmptyList()
-            } else {
-                FilmsList(
-                    modifier = Modifier
-                        .padding(innerPadding),
-                    films = films,
-                    onEvent = onEvent,
-                )
-            }
-        }
-        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            uiState.selectedFilm?.let { selectedFilm ->
-                FilmsDetailScreen(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    poster = selectedFilm.poster.resource,
-                    descriptor = selectedFilm.description,
-                    name = selectedFilm.name,
-                    genre = selectedFilm.genres.map(Genre::name).joinToString(", "),
-                    country = selectedFilm.countries.map(Country::name).joinToString(", "),
-                    error = uiState.errorFilmDetail,
-                    loading = uiState.filmDetailLoading,
-                    onClickBack = {
-                        onEvent(FilmsEvent.ClearSelectedFilm)
-                    },
-                    onClickRetry = {
-                        onEvent(FilmsEvent.RefreshFilmDetail(selectedFilm.id))
-                    }
-                )
+            if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                uiState.selectedFilm?.let { selectedFilm ->
+                    FilmsDetailScreen(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        poster = selectedFilm.poster.resource,
+                        descriptor = selectedFilm.description,
+                        name = selectedFilm.name,
+                        genre = selectedFilm.genres.map(Genre::name).joinToString(", "),
+                        country = selectedFilm.countries.map(Country::name).joinToString(", "),
+                        error = uiState.errorFilmDetail,
+                        loading = uiState.filmDetailLoading,
+                        onClickBack = {
+                            onEvent(FilmsEvent.ClearSelectedFilm)
+                        },
+                        onClickRetry = {
+                            onEvent(FilmsEvent.RefreshFilmDetail(selectedFilm.id))
+                        }
+                    )
+                }
             }
         }
     }
