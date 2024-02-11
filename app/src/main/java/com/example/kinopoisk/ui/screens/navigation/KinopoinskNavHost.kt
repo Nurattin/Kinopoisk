@@ -12,8 +12,6 @@ import com.example.kinopoisk.ui.screens.main.navigation.main
 fun KinopoinskNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    onClickBack: () -> Unit,
-    onShowSnackbar: suspend (String, String?) -> Unit,
 ) {
     val startDestination = MAIN_ROUTE_PATTERN
 
@@ -23,9 +21,7 @@ fun KinopoinskNavHost(
         startDestination = startDestination,
     ) {
         main {
-            films(
-                navController = navController,
-            )
+            films()
         }
     }
 }

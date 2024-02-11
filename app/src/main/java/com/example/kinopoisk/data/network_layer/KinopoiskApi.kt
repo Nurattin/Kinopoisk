@@ -15,6 +15,6 @@ interface KinopoiskApi {
 
     @GET("/api/v2.2/films/{id}")
     suspend fun getFilmById(
-        @Path("type") type: String,
+        @Path("id") id: String,
     ): FilmDetailDto
 }

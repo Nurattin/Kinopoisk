@@ -11,8 +11,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.core.view.WindowCompat
 import com.example.kinopoisk.ui.screens.AppScreen
 import com.example.kinopoisk.ui.theme.KinopoiskTheme
-import com.example.kinopoisk.ui.theme.darkScrim
-import com.example.kinopoisk.ui.theme.lightScrim
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,10 +33,10 @@ class MainActivity : ComponentActivity() {
                             }
                         ),
                         navigationBarStyle = SystemBarStyle.auto(
-                            lightScrim = lightScrim,
-                            darkScrim = darkScrim,
+                            lightScrim = Color.TRANSPARENT,
+                            darkScrim = Color.TRANSPARENT,
                             detectDarkMode = {
-                                isDarkTheme
+                                true
                             }
                         ),
                     )
